@@ -8,7 +8,7 @@ import androidx.work.WorkerParameters
 class DemoWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
     override fun doWork(): Result {
         performWork()
-        return Result.failure()
+        return Result.retry()
     }
 
     private fun performWork() {

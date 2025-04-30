@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
+import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.gurukrupa.workmanagerdemo.worker.DemoWorker
 import java.util.concurrent.TimeUnit
@@ -20,9 +20,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doWork() {
-        val request = OneTimeWorkRequest.Builder(DemoWorker::class.java)
-            .setConstraints( Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
-            .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.SECONDS )
+        val request = PeriodicWorkRequest.Builder(DemoWorker::class.java, 15, TimeUnit.MINUTES)
+            .setConstraints(
+                Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+            )
+            //Below back office set linear it means time if request is failed then every 10 second 20 second 30 second and so one
+            // In EXPONENTIAL if request is failed then 10, 20, 40, 80 like this retry
+            .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.SECONDS)
             .build()
         workManager.enqueue(request)
         workManager.getWorkInfoByIdLiveData(request.id).observe(this) {
