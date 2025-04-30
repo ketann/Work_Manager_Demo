@@ -8,10 +8,10 @@ import androidx.work.WorkerParameters
 class DemoWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
     override fun doWork(): Result {
         performWork()
-        return Result.retry()
+        return Result.success()
     }
 
-    fun performWork() {
+    private fun performWork() {
         Thread.sleep(2000)
         Log.d("WorkManagerDemo1111", "Task Completed")
     }
